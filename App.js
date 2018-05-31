@@ -5,10 +5,10 @@ import { Provider, connect } from 'react-redux';
 import axios from 'axios';
 import axiosMiddleware from 'redux-axios-middleware';
 import { Ionicons } from '@expo/vector-icons'; // Version can be specified in package.json
-import { TabNavigator, TabBarBottom } from 'react-navigation'; // Version can be specified in package.json
+// import { TabNavigator, TabBarBottom, createBottomTabNavigator } from 'react-navigation';
+import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 
 import rootReducer from './reducers/index';
-
 import getcategories from './reducers/reducer';
 import CategoryList from './components/CategoryList';
 import RandomJoke from './components/RandomJoke';
@@ -19,44 +19,32 @@ const client = axios.create({
 
 const store = createStore(getcategories, applyMiddleware(axiosMiddleware(client)));
 
-const RootNavigator =  TabNavigator(
+const RootStack = createStackNavigator(
   {
-    Home: { screen: CategoryList },
-    Random: { screen: RandomJoke },
+    Home: CategoryList,
+    Random: RandomJoke,
   },
   {
-    navigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, tintColor }) => {
-        const { routeName } = navigation.state;
-        let iconName;
-        if (routeName === 'Home') {
-          iconName = `ios-information-circle${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Random') {
-          iconName = `ios-options${focused ? '' : '-outline'}`;
-        }
-        // You can return any component that you like here! We usually use an
-        // icon component from react-native-vector-icons
-        return <Ionicons name={iconName} size={25} color={tintColor} />;
+    initialRouteName: 'Home',
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#841584',
       },
-    }),
-    tabBarComponent: TabBarBottom,
-    tabBarPosition: 'bottom',
-    tabBarOptions: {
-      activeTintColor: 'tomato',
-      inactiveTintColor: 'gray',
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
     },
-    animationEnabled: false,
-    swipeEnabled: false, 
   }
 );
-export default class App extends Component {
+
+export default class App extends React.Component {
   render() {
+
     return (
       <Provider store={store}>
-        <View style={styles.container}>
-          <RootNavigator />
-        </View>
-      </Provider>
+          <RootStack />
+       </Provider>
     );
   }
 }

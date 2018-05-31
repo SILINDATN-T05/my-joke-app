@@ -6,6 +6,9 @@ import { getRandomJoke } from './../reducers/reducer';
 import styles from './../styles/styles';
 
 class RandomJoke extends Component {
+    static navigationOptions = {
+      title: 'Random',
+    };
     componentDidMount() {
         this.props.getRandomJoke();
     }
@@ -40,7 +43,7 @@ class RandomJoke extends Component {
         );
     } else {
         return (
-            <View>
+            <View style={styles.container}>
                 <Text> No Category Joke</Text>
             </View>
         );
